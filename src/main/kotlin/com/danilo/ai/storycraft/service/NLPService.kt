@@ -1,6 +1,6 @@
 package com.danilo.ai.storycraft.service
 
-import OpenAIResponse
+import com.danilo.ai.storycraft.model.OpenAIResponse
 import com.danilo.ai.storycraft.model.Message
 import com.danilo.ai.storycraft.model.OpenAIChatRequest
 import com.fasterxml.jackson.core.type.TypeReference
