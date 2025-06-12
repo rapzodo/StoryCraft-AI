@@ -1,6 +1,9 @@
 import com.danilo.ai.storycraft.config.AppConfig
 import com.danilo.ai.storycraft.service.JiraIntegrationService
 import com.danilo.ai.storycraft.service.NLPService
+import com.danilo.ai.storycraft.model.FeatureDescriptionRequest
+import com.danilo.ai.storycraft.model.GeneratedStoryResponse
+import com.danilo.ai.storycraft.util.formatJiraDescription
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -78,5 +81,28 @@ class JiraIntegrationServiceTest : FunSpec({
         }
 
         exception.message shouldBe "Unexpected code 400 : $expectedJiraResponseBody"
+    }
+
+    test("extractJiraStories should map NLP stories to JiraUserStory") {
+        val featureRequest = FeatureDescriptionRequest("Feature", "PROJ", "BOARD", "EPIC-1", "Sprint 1")
+        val generatedStories = listOf(
+            GeneratedStoryResponse("title", "desc", "tech", listOf("AC1", "AC2"))
+        )
+
+        every { nlpService.extractUserStories("Feature") } returns generatedStories
+
+        val result = jiraIntegrationService.extractJiraStories(featureRequest)
+
+        result shouldBe listOf(
+            JiraUserStory(
+                title = "title",
+                description = formatJiraDescription("tech", listOf("AC1", "AC2")),
+                project = "PROJ",
+                epicLink = "EPIC-1",
+                plannedSprint = "Sprint 1"
+            )
+        )
+
+        verify(exactly = 1) { nlpService.extractUserStories("Feature") }
     }
 })

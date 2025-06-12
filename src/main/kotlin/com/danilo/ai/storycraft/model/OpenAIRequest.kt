@@ -5,4 +5,3 @@ data class OpenAIChatRequest(
     val messages: List<Message>
 )
 
-
