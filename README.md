@@ -84,7 +84,7 @@ The application consists of the following components:
     ```
 
 
-2**Configure Jira Credentials**:
+2. **Configure Jira Credentials**:
 
    Add your Jira token to `src/main/resources/application.yml`:
     ```yaml
