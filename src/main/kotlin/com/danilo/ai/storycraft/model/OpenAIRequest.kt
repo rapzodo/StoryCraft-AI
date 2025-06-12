@@ -2,10 +2,10 @@ package com.danilo.ai.storycraft.model
 
 data class OpenAIChatRequest(
     val model: String,
-    val messages: List<Message>
+    val messages: List<ChatMessage>
 )
 
-data class Message(
+data class ChatMessage(
     val role: String,
     val content: String
 )

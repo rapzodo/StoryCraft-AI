@@ -1,10 +1,11 @@
 package com.danilo.ai.storycraft.service
 
 import com.danilo.ai.storycraft.model.OpenAIResponse
-import com.danilo.ai.storycraft.model.Message
+import com.danilo.ai.storycraft.model.ChatMessage
 import com.danilo.ai.storycraft.model.OpenAIChatRequest
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.danilo.ai.storycraft.util.generatePrompt
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -27,11 +28,11 @@ class NLPService(
     fun extractUserStories(description: String): List<com.danilo.ai.storycraft.model.GeneratedStoryResponse> {
         logger.info("extracting stories using model $openaiApiModel")
         val messages = listOf(
-            Message(
+            ChatMessage(
                 role = "system",
                 content = "You are a Software Engineer that helps to create user and coding stories from descriptions."
             ),
-            Message(
+            ChatMessage(
                 role = "user", content = generatePrompt(description)
             )
         )
@@ -67,30 +68,5 @@ class NLPService(
         return objectMapper.readValue(json, object : TypeReference<List<com.danilo.ai.storycraft.model.GeneratedStoryResponse>>() {})
     }
 
-    private fun generatePrompt(description: String): String {
-        return """
-    Please analyze the following feature description and break it down into detailed technical Jira stories for the development team. Each story should:
-
-    - Use technical language appropriate for software developers.
-    - Include specific implementation details, such as technologies to be used, data models, algorithms, and integration points.
-    - Define acceptance criteria that cover functionality, performance, and compliance requirements.
-
-    Present each story as a JSON object with the following format:
-
-    [{
-        "title": "Technical Story Title",
-        "description": "As a [system/component/user role], I need [technical requirement], so that [goal].",
-        "technical_details": "Detailed technical implementation plan.",
-        "acceptance_criteria": [
-            "Functional acceptance criterion",
-            "Compliance acceptance criterion"
-        ]
-    }]
-
-    Here's the feature description:
-
-    $description
-    """.trimIndent()
-    }
 }
 
