@@ -30,6 +30,33 @@ The application consists of the following components:
 - **JiraIntegrationService**: Creates issues in Jira based on extracted user stories.
 - **UserStoryController**: REST controller for handling requests.
 
+### Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Controller as UserStoryController
+    participant NLPService
+    participant JiraIntegrationService
+    participant OpenAI
+    participant Jira
+
+    Client->>Controller: POST /api/stories/extract
+    Controller->>JiraIntegrationService: extractJiraStories(description)
+    JiraIntegrationService->>NLPService: extractUserStories(description)
+    NLPService->>OpenAI: ChatCompletion request
+    OpenAI-->>NLPService: user stories
+    NLPService-->>JiraIntegrationService: parsed stories
+    JiraIntegrationService-->>Controller: List<JiraUserStory>
+
+    Client->>Controller: POST /api/stories/issues
+    Controller->>JiraIntegrationService: createJiraIssue(story)
+    JiraIntegrationService->>Jira: POST /issue
+    Jira-->>JiraIntegrationService: issue info
+    JiraIntegrationService-->>Controller: JiraResponse
+    Controller-->>Client: issue data
+```
+
 ## Setup
 
 ### Prerequisites
