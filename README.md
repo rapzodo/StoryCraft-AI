@@ -77,21 +77,21 @@ The application consists of the following components:
 1. **Configure OpenAI API Key**:
 
    Add your OpenAI API token to `src/main/resources/application.yml`:
-    ```yaml
-    api:
-      openai:
-        key: your_token
-    ```
+   ```yaml
+   api:
+     openai:
+       token: your_token
+   ```
 
-
-2**Configure Jira Credentials**:
+2. **Configure Jira Credentials**:
 
    Add your Jira token to `src/main/resources/application.yml`:
-    ```yaml
-    jira:
-      url: https://your-jira-instance.atlassian.net
-      apiToken: your-api-token
-    ```
+   ```yaml
+   api:
+     jira:
+       url: https://your-jira-instance.atlassian.net/rest/api/3
+       token: your-api-token
+   ```
 
 ## Usage
 
